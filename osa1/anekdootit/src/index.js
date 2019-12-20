@@ -15,10 +15,16 @@ const Anecdote = ({anecdotes, index, votearray}) => {
 }
 
 const vote = (votearray, selected, setMax, setArray) => {
+        let index = 0
+        let curr_max = 0
+        for (let i = 0; i < votearray.length; i++){
+            if(votearray[i] > curr_max){
+                curr_max = votearray[i]
+                index = i
+            }
+        }
+        setMax(index)
         changeArray(votearray, setArray, selected)
-        let new_max = votearray.indexOf(Math.max(votearray))
-        console.log(Math.max(votearray))
-        setMax(new_max)
     
 }
 
