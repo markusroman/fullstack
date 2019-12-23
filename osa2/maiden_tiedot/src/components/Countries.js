@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Country from './Country'
 
 const Countries = (props) => {
-    const [country, setCountry] = useState({})
     let filtered = [...props.data];
     const filterData = (element) => {
         const name = element.name.toUpperCase();
@@ -12,20 +11,17 @@ const Countries = (props) => {
         };
         return false;
     };
+
     const buttonHandler = (event) => {
         event.preventDefault()
         const func = props.handleClick
         for(let i = 0; i < filtered.length; i++) {
             if (filtered[i].name === event.target.id){
-                console.log(country, "hoi")
-                setCountry(filtered[i])
-                console.log(country, "moi")
-                func(country)
+                func(filtered[i])
             }
         }
-        
-        
     }
+
     const countryHandler = (element) => {
         return (
             <li key={element.name} >
@@ -46,7 +42,7 @@ const Countries = (props) => {
         </ul>
         )
     } else if ( filtered.length === 1 ) {
-        return <Country data={filtered[0]} />
+        return <Country country_data={filtered[0]} />
     }
     return null;
 }

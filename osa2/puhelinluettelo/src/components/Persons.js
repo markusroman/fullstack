@@ -18,7 +18,7 @@ const Persons = (props) => {
     }
     
     return (
-        <ul>{filtered.map(element => <Person person={element} key={element.id}  />)}</ul>
+        <ul>{filtered.map(element => <Person person={element} key={element.id} deleteFunc={props.deleteFunc} />)}</ul>
     )
 }
 

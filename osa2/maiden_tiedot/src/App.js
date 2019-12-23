@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import Filter from './components/Filter';
 import Countries from './components/Countries';
-import Country from './components/Country';
 
 const App = () => {
   const [ data, setData ] = useState([]);
@@ -20,12 +19,8 @@ const App = () => {
     setFilter(newFilter)
   };
 
-  const handleClick = (data) => {
-    return (
-      <>
-        <Country data={data} />
-      </>
-    )
+  const handleClick = (country_data) => {
+    setFilter(country_data.name)
   }
 
   return (

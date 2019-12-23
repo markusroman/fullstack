@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import personService from './services/persons'
+import Notification from './components/Notification'
 
 
 const App = () => {
@@ -10,14 +11,14 @@ const App = () => {
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNumber ] = useState('')
     const [ filter, setFilter ] = useState('')
+    const [ message, setMessage ] = useState(null)
 
     useEffect(() => {
-        axios
-          .get('http://localhost:3001/persons')
-          .then(response => {
-              console.log(response.data)
-            setPersons(response.data)
-          })
+        personService
+        .getAll()
+        .then(initialPersons => {
+        setPersons(initialPersons)
+        })
       }, [])
 
     const handleName = (event) => {
@@ -36,36 +37,86 @@ const App = () => {
   
     const submit = (event) => {
         event.preventDefault()
-        if (newName === '' || newNumber === '' ){
-            return
-        }
-        if (persons.find(element => element.name === newName) !== undefined){
-            window.alert(`${newName} is already added to phonebook`)
-            return
-        }
-        if (persons.find(element => element.number === newNumber) !== undefined){
-            window.alert(`${newNumber} is already added to phonebook`)
-            return
-        }
         const new_person = {
             name: newName,
             number: newNumber
         }
-        setPersons(persons.concat(new_person))
-        setNewName('')
-        setNumber('')
+        if (newName === '' || newNumber === '' ){
+            return null
+        }
+        if (persons.find(element => element.number === newNumber) !== undefined){
+            window.alert(`${newNumber} is already added to phonebook`)
+            return null
+        }
+        if (persons.find(element => element.name === newName) !== undefined){
+            const confirm = window.confirm(
+                `${newName} is already added to phonebook, replace the old number with a new one?`)
+            if(confirm){
+                for (let i = 0; i < persons.length; i++){
+                    if (newName === persons[i].name){
+                        personService.update(persons[i].id, new_person)
+                        .then(returnedPerson => {
+                            setPersons(persons.map(p => p.name !== newName ? p : returnedPerson))
+                            setMessage(`Updated ${newName}`)
+                            setTimeout(() => {
+                                setMessage(null)
+                            }, 5000)
+                        })
+                    }
+                }
+            }
+            setNewName('')
+            setNumber('')
+            return null
+        }
+        
+        personService.create(new_person)
+        .then(returned => {
+            setPersons(persons.concat(returned))
+            setNewName('')
+            setNumber('')
+            setMessage(`Added ${newName}`)
+            setTimeout(() => {
+                setMessage(null)
+            }, 5000)
+        })
+        
+    }
+
+    const deleteFunc = id => {
+        if(window.confirm(`Delete ${id}?`)){
+            for (let i = 0; i < persons.length; i++){
+                if (id === persons[i].name){
+                    personService.remove(persons[i].id)
+                    .then(() => {
+                        setPersons(persons.filter(p => p.name !== id))
+                        setMessage(`Deleted ${id}`)
+                        setTimeout(() => {
+                            setMessage(null)
+                        }, 5000)
+                    })
+                    .catch(error => {
+                        setMessage(`Information of ${id} has already been removed from server`)
+                        setTimeout(() => {
+                            setMessage(null)
+                        }, 5000)
+                    })
+                }
+            }
+        }
     }
 
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={message} />
             <Filter handleFilter={handleFilter}/>
             <h2>add a new</h2>
             <PersonForm submit={submit} newName={newName} newNumber={newNumber} 
             handleName={handleName} 
             handleNumber={handleNumber} />
             <h2>Numbers</h2>
-            <Persons data={persons} filter={filter} />
+            <Persons data={persons} filter={filter} deleteFunc={deleteFunc} />
         </div>
     )
 
