@@ -14,7 +14,6 @@ const App = () => {
         setData(response.data)
       })
   }, []);
-
   const handleFilter = (newFilter) => {
     setFilter(newFilter)
   };

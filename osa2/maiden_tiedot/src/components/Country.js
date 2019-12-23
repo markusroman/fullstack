@@ -6,15 +6,20 @@ const Country = ({country_data}) => {
     const [weather, setWeather] = useState({})
 
     useEffect(() => {
+        const params = {
+            access_key: 'f82e2da83c475e235c07a1004b58fa29',
+            query: `${country_data.capital}`,
+            units: 'm'
+        }
+
         axios
-          .get(`http://api.apixu.com/v1/current.json?key=f83e894e97624aea833145251191308&q=${country_data.capital}`
+          .get('http://api.weatherstack.com/current', {params}
           )
           .then(response => {
             setWeather(response.data);
           });
     }, []);
 
-    console.log(country_data, weather)
     return (
         <>
             {weather.current === undefined ? (
@@ -31,9 +36,9 @@ const Country = ({country_data}) => {
                     <img src={country_data.flag} alt={`${country_data.name} flag`} width={300} height={150} />
 
                     <h3>weather in {country_data.capital}</h3>
-                    <h5>temperature: {weather.current.temp_c} Celsius</h5>
-                    <img src={`https:${weather.current.condition.icon}`} alt="current weather icon" />
-                    <h5>wind: {weather.current.wind_kph} kph direction {weather.current.wind_dir}</h5>
+                    <h5>temperature: {weather.current.temperature} Celsius</h5>
+                    <img src={weather.current.weather_icons} alt="current weather icon" />
+                    <h5>wind: {weather.current.wind_speed} kph direction {weather.current.wind_dir}</h5>
                 </>
             )}
         </>
