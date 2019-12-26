@@ -56,7 +56,6 @@ const App = () => {
                     if (newName === persons[i].name) {
                         personService.update(persons[i].name, new_person)
                             .then(returnedPerson => {
-                                console.log("update", returnedPerson)
                                 setPersons(persons.map(p => p.name !== newName ? p : returnedPerson))
                                 setMessage(`Updated ${newName}`)
                                 setTimeout(() => {
@@ -74,7 +73,6 @@ const App = () => {
 
         personService.create(new_person)
             .then(returned => {
-                console.log("add", returned)
                 setPersons(persons.concat(returned))
                 setNewName('')
                 setNumber('')
@@ -92,9 +90,7 @@ const App = () => {
                 if (id === persons[i].name) {
                     personService.remove(persons[i].name)
                         .then(() => {
-                            console.log("before del", persons)
                             setPersons(persons.filter(p => p.name !== id))
-                            console.log("after del", persons)
                             setMessage(`Deleted ${id}`)
                             setTimeout(() => {
                                 setMessage(null)
