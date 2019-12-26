@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Person = ({person, deleteFunc}) => {
+const Person = ({ person, deleteFunc }) => {
     const handleButton = (event) => {
         event.preventDefault()
         deleteFunc(event.target.id)
