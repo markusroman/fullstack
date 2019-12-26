@@ -17,7 +17,6 @@ const App = () => {
         personService
             .getAll()
             .then(initialPersons => {
-                console.log("Get all", initialPersons)
                 setPersons(initialPersons)
             })
     }, [])
@@ -55,7 +54,7 @@ const App = () => {
             if (confirm) {
                 for (let i = 0; i < persons.length; i++) {
                     if (newName === persons[i].name) {
-                        personService.update(persons[i].id, new_person)
+                        personService.update(persons[i].name, new_person)
                             .then(returnedPerson => {
                                 console.log("update", returnedPerson)
                                 setPersons(persons.map(p => p.name !== newName ? p : returnedPerson))
@@ -90,8 +89,8 @@ const App = () => {
     const deleteFunc = id => {
         if (window.confirm(`Delete ${id}?`)) {
             for (let i = 0; i < persons.length; i++) {
-                if (id === persons[i].id) {
-                    personService.remove(persons[i].id)
+                if (id === persons[i].name) {
+                    personService.remove(persons[i].name)
                         .then(() => {
                             console.log("before del", persons)
                             setPersons(persons.filter(p => p.name !== id))
