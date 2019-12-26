@@ -18,8 +18,7 @@
     "eject": "react-scripts eject",
     "server": "json-server -p3001 db.json",
     "build:ui": "rm -rf build && npm run build && cp -rf build ~/backend-osa3",
-    "deploy": "cd ~/backend-osa3 && git add . && git commit -m uibuild && git push osa3 master",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push fullstack master && npm run deploy",    
+    "deploy": "npm run build:ui && git add . && git commit -m 'uibuild' && git push fullstack master",    
     "logs:prod": "cd ~/backend-osa3 && heroku logs --tail"
   },
   "eslintConfig": {
