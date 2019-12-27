@@ -4,6 +4,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import personService from './services/persons'
 import Notification from './components/Notification'
+import Error from './components/Error'
 
 
 const App = () => {
@@ -12,12 +13,18 @@ const App = () => {
     const [newNumber, setNumber] = useState('')
     const [filter, setFilter] = useState('')
     const [message, setMessage] = useState(null)
-
+    const [errmsg, setError] = useState(null)
     useEffect(() => {
         personService
             .getAll()
             .then(initialPersons => {
                 setPersons(initialPersons)
+            })
+            .catch(error => {
+                setError(error.response.data.error)
+                setTimeout(() => {
+                    setError(null)
+                }, 5000)
             })
     }, [])
 
@@ -49,12 +56,10 @@ const App = () => {
             return null
         }
         if (persons.find(element => element.name === newName) !== undefined) {
-            const confirm = window.confirm(
-                `${newName} is already added to phonebook, replace the old number with a new one?`)
-            if (confirm) {
+            if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
                 for (let i = 0; i < persons.length; i++) {
                     if (newName === persons[i].name) {
-                        personService.update(persons[i].name, new_person)
+                        personService.update(persons[i].id, new_person)
                             .then(returnedPerson => {
                                 setPersons(persons.map(p => p.name !== newName ? p : returnedPerson))
                                 setMessage(`Updated ${newName}`)
@@ -62,44 +67,55 @@ const App = () => {
                                     setMessage(null)
                                 }, 5000)
                             })
+                            .catch(error => {
+                                setError(error.response.data.error)
+                                setTimeout(() => {
+                                    setError(null)
+                                }, 5000)
+                            })
+                        setNewName('')
+                        setNumber('')
                         return null
                     }
                 }
             }
-            setNewName('')
-            setNumber('')
             return null
         }
 
         personService.create(new_person)
             .then(returned => {
                 setPersons(persons.concat(returned))
-                setNewName('')
-                setNumber('')
                 setMessage(`Added ${newName}`)
                 setTimeout(() => {
                     setMessage(null)
                 }, 5000)
             })
-
+            .catch(error => {
+                setError(error.response.data.error)
+                setTimeout(() => {
+                    setError(null)
+                }, 5000)
+            })
+        setNewName('')
+        setNumber('')
     }
 
     const deleteFunc = id => {
-        if (window.confirm(`Delete ${id}?`)) {
+        if (window.confirm(`Are you sure you want to delete?`)) {
             for (let i = 0; i < persons.length; i++) {
-                if (id === persons[i].name) {
-                    personService.remove(persons[i].name)
+                if (id === persons[i].id) {
+                    personService.remove(persons[i].id)
                         .then(() => {
-                            setPersons(persons.filter(p => p.name !== id))
-                            setMessage(`Deleted ${id}`)
+                            setPersons(persons.filter(p => p.id !== id))
+                            setMessage(`Deleted ${persons[i].name}`)
                             setTimeout(() => {
                                 setMessage(null)
                             }, 5000)
                         })
                         .catch(error => {
-                            setMessage(`Information of ${id} has already been removed from server`)
+                            setError(`Information of ${persons[i].name} has already been removed from server`)
                             setTimeout(() => {
-                                setMessage(null)
+                                setError(null)
                             }, 5000)
                         })
                 }
@@ -111,6 +127,7 @@ const App = () => {
         <div>
             <h2>Phonebook</h2>
             <Notification message={message} />
+            <Error message={errmsg} />
             <Filter handleFilter={handleFilter} />
             <h2>add a new</h2>
             <PersonForm submit={submit} newName={newName} newNumber={newNumber}

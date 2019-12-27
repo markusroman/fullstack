@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Notification = ({ message }) => {
+const Error = ({ message }) => {
     const style = {
         width: 300,
-        color: 'green',
+        color: 'red',
         background: 'lightgrey',
         fontSize: 20,
         borderStyle: 'solid',
@@ -22,4 +22,4 @@ const Notification = ({ message }) => {
     )
 }
 
-export default Notification
+export default Error

@@ -7,7 +7,7 @@ const Person = ({ person, deleteFunc }) => {
     }
     return (
         <>
-            <li>{person.name} {person.number} <button type="button" onClick={handleButton} id={person.name} >delete</button></li>
+            <li>{person.name} {person.number} <button type="button" onClick={handleButton} id={person.id} >delete</button></li>
         </>
     )
 }
