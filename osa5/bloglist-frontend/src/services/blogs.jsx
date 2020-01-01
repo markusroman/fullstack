@@ -14,28 +14,69 @@ const setToken = newToken => {
 }
 
 const getAll = () => {
-  const request = axios.get(baseUrl)
-  return request.then(response => response.data)
+    axios
+    .get(baseUrl)
+    .then(response => {
+      console.log(response.data)
+      return (
+        response.data
+        )})
+    .catch(error =>{
+      console.log(error)
+      return null
+    })
 }
 
 const getOne = (id) => {
-  const request = axios.get(`${baseUrl} /${id}`)
-  return request.then(response => response.data)
+  axios
+  .get(`${baseUrl}/${id}`)
+  .then(response => {
+    return (
+      response.data
+      )})
+  .catch(error =>{
+    console.log(error)
+    return null
+  })
 }
 
-const create = async newObject => {
-  const response = await axios.post(baseUrl, newObject, config)
-  return response.data
+const create = (newObject) => {
+  axios
+  .post(baseUrl, newObject, config)
+  .then(response => {
+    return (
+      response.data
+      )})
+  .catch(error =>{
+    console.log(error)
+    return null
+  })
 }
 
 const update = (id, newObject) => {
-  const request = axios.put(`${baseUrl} /${id}`, newObject, config)
-  return request.then(response => response.data)
+    axios
+    .put(`${baseUrl}/${id}`, newObject, config)
+    .then(response => {
+      return (
+        response.data
+        )})
+    .catch(error =>{
+      console.log(error)
+      return null
+    })
 }
 
 const remove = (id) => {
-  const request = axios.delete(`${baseUrl}/${id}`, config)
-  return request.then(response => response.data)
+  axios
+  .delete(`${baseUrl}/${id}`, config)
+  .then(response => {
+    return (
+      response.data
+      )})
+  .catch(error =>{
+    console.log(error)
+    return null
+  })
 }
 
 export default { getAll, getOne, create, update, setToken, remove }
