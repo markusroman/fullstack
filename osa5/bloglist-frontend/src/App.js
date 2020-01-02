@@ -14,14 +14,18 @@ const App = () => {
   const [showAll, setShowAll] = useState(true)
 
   useEffect(() => {
-    console.log("HAKU ALKAA")
-    console.log("BLOGSERVICE", blogService)
-    blogService.getAll()
+    blogService
+      .getAll()
       .then(initialBlogs => {
-        console.log(initialBlogs)
+        initialBlogs.map(b => b.user = b.user.username)
         setblogs(initialBlogs)
       })
-      .catch(error => console.log(error))
+      .catch(error => {
+        setMessage(error.response.data.error)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+      })
   }, [])
 
   useEffect(() => {
@@ -33,29 +37,36 @@ const App = () => {
     }
   }, [])
 
-  const handleLogin = (username, password) => {
-    const user = loginService.login({
-      username, password,
-    })
-    console.log(user)
-    if (user === null) {
+  const handleLogin = async (username, password) => {
+    if (username === "" || password === "") {
       setMessage("Wrong credentials")
       setTimeout(() => {
         setMessage(null)
       }, 5000)
+      return null
+    }
+    const loggedUser = await loginService.login({ username, password })
+    console.log("USER BEFORE", user, "LOGGED", loggedUser)
+    if (loggedUser === null) {
+      setMessage("Wrong credentials")
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+      return null
     }
     window.localStorage.setItem(
-      'loggedblogappUser', JSON.stringify(user)
+      'loggedblogappUser', JSON.stringify(loggedUser)
     )
-    blogService.setToken(user.token)
-    setUser(user)
-    setMessage(`Logged in as ${user.name}`)
+    blogService.setToken(loggedUser.token)
+    setMessage(`Login successful`)
+    setUser(loggedUser)
     setTimeout(() => {
       setMessage(null)
     }, 5000)
   }
 
   const addBlog = (blogObject) => {
+
     if (blogObject.title === "" || blogObject.url === "" || blogObject.author === "") {
       setMessage("Blog can't have empty fields")
       setTimeout(() => {
@@ -100,7 +111,6 @@ const App = () => {
   const handleLogout = (event) => {
     event.preventDefault()
     window.localStorage.removeItem('loggedblogappUser')
-
     setMessage(`Logged out ${user.name}`)
     setUser(null)
     setTimeout(() => {
@@ -114,7 +124,9 @@ const App = () => {
       ...blog[0],
       likes: blog[0].likes + 1,
     }
-    const updated = blogService.update(newBlog.id, newBlog)
+
+    const updated = await blogService.update(newBlog.id, newBlog)
+    console.log(blog, updated)
     if (updated === null) {
       setMessage("Something went wrong")
       setTimeout(() => {
@@ -122,8 +134,12 @@ const App = () => {
       }, 5000)
       return null
     }
-    blogService.getAll().then(blogs => setblogs(blogs))
-    setMessage(`Blog "${newBlog.title}" by ${newBlog.author} liked by ${user.name}`)
+    setblogs(blogs.map(b => b.id === newBlog.id ? updated : b))
+    user === null ?
+      setMessage(`Blog "${newBlog.title}" by ${newBlog.author} liked`)
+      :
+      setMessage(`Blog "${newBlog.title}" by ${newBlog.author} liked by ${user.username}`)
+
     setTimeout(() => {
       setMessage(null)
     }, 5000)
@@ -143,21 +159,24 @@ const App = () => {
             <Loginform handleLogin={handleLogin} />
           </Togglable>
           :
-          <div>
-            Logged in as {user.name}
-            <button type="button" onClick={handleLogout}>Logout</button>
-          </div>
+          <>
+            <div>
+              Logged in as {user.username}
+              <button type="button" onClick={handleLogout}>Logout</button>
+            </div>
+            <Togglable buttonLabel='new blog'>
+              <Blogform addBlog={addBlog} />
+            </Togglable>
+          </>
       }
 
-      <Togglable buttonLabel='new blog'>
-        <Blogform addBlog={addBlog} />
-      </Togglable>
+
 
       {
         blogs.length === 0 ?
           <p>No blogs in database</p>
           :
-          <Blogs blogs={blogs} delBlog={delBlog} addLike={addLike} changeShow={changeShow} />
+          <Blogs blogs={blogs} delBlog={delBlog} addLike={addLike} changeShow={changeShow} user={user} />
       }
     </div>
   )

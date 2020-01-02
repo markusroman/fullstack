@@ -13,70 +13,35 @@ const setToken = newToken => {
   }
 }
 
-const getAll = () => {
-    axios
-    .get(baseUrl)
-    .then(response => {
-      console.log(response.data)
-      return (
-        response.data
-        )})
-    .catch(error =>{
-      console.log(error)
-      return null
-    })
+const getAll = async () => {
+  console.log("Haetaan...")
+  const res = await axios.get(baseUrl)
+  return res.data
 }
 
-const getOne = (id) => {
-  axios
-  .get(`${baseUrl}/${id}`)
-  .then(response => {
-    return (
-      response.data
-      )})
-  .catch(error =>{
-    console.log(error)
-    return null
-  })
+const getOne = async (id) => {
+  
+  console.log("Haetaan yhtä...")
+  const res = await axios.get(`${baseUrl}/${id}`)
+  return res.data
 }
 
-const create = (newObject) => {
-  axios
-  .post(baseUrl, newObject, config)
-  .then(response => {
-    return (
-      response.data
-      )})
-  .catch(error =>{
-    console.log(error)
-    return null
-  })
+const create = async (newObject) => {
+  console.log("Luodaan uutta...")
+  const res = await axios.post(baseUrl, newObject, config)
+  return res.data
 }
 
-const update = (id, newObject) => {
-    axios
-    .put(`${baseUrl}/${id}`, newObject, config)
-    .then(response => {
-      return (
-        response.data
-        )})
-    .catch(error =>{
-      console.log(error)
-      return null
-    })
+const update = async (id, newObject) => {
+  console.log("Lisätään tykkäys...")
+  const res = await axios.put(`${baseUrl}/${id}`, newObject, config)
+  return res.data
 }
 
-const remove = (id) => {
-  axios
-  .delete(`${baseUrl}/${id}`, config)
-  .then(response => {
-    return (
-      response.data
-      )})
-  .catch(error =>{
-    console.log(error)
-    return null
-  })
+const remove = async (id) => {
+  console.log("Poistetaan...")
+  const res = await axios.delete(`${baseUrl}/${id}`, config)
+  return res.data
 }
 
 export default { getAll, getOne, create, update, setToken, remove }

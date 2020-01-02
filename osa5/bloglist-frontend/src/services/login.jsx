@@ -1,16 +1,15 @@
 import axios from 'axios'
 const baseUrl = '/api/login'
 
-const login = (credentials) => {
-    try {
-        axios
-        .post(baseUrl, credentials)
-        .then(response => response.data)
-    } catch (error) {
-      console.log(error)
-      return null
-    }
-    
+const login = async (credentials) => {
+  try {
+    console.log("Kirjaudutaan...")
+    const res = await axios.post(baseUrl, credentials)
+    return res.data
+  } catch (error) {
+    return null
+  }
+  
 }
 
 export default { login }
