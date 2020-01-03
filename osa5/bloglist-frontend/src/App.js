@@ -65,7 +65,7 @@ const App = () => {
     }, 5000)
   }
 
-  const addBlog = (blogObject) => {
+  const addBlog = async (blogObject) => {
 
     if (blogObject.title === "" || blogObject.url === "" || blogObject.author === "") {
       setMessage("Blog can't have empty fields")
@@ -74,7 +74,7 @@ const App = () => {
       }, 5000)
       return null
     }
-    const addedBlog = blogService.create(blogObject)
+    const addedBlog = await blogService.create(blogObject)
     if (addedBlog === null) {
       setMessage("Something went wrong")
       setTimeout(() => {
@@ -82,18 +82,20 @@ const App = () => {
       }, 5000)
       return null
     }
-    setMessage(`A new blog "${addedBlog.title}" by ${addedBlog.author} added by ${user.name}`)
-    setblogs(blogs.concat(addedBlog))
+    const allBlogs = await blogService.getAll()
+    allBlogs.map(b => b.user = b.user.username)
+    setblogs(allBlogs)
+    setMessage(`A new blog "${addedBlog.title}" by ${addedBlog.author} added by ${user.username}`)
     setTimeout(() => {
       setMessage(null)
     }, 5000)
   }
 
-  const delBlog = (blogObject) => {
+  const delBlog = async (blogObject) => {
     if (!window.confirm(`Remove blog "${blogObject.title}" by ${blogObject.author}?`)) {
       return null
     }
-    const response = blogService.remove(blogObject.id)
+    const response = await blogService.remove(blogObject.id)
     if (response === null) {
       setMessage("Something went wrong")
       setTimeout(() => {
@@ -101,7 +103,7 @@ const App = () => {
       }, 5000)
       return null
     }
-    setMessage(`Blog "${blogObject.title}" by ${blogObject.author} removed by ${user.name}`)
+    setMessage(`Blog "${blogObject.title}" by ${blogObject.author} removed by ${user.username}`)
     setblogs(blogs.filter(b => b.id !== blogObject.id))
     setTimeout(() => {
       setMessage(null)
@@ -167,16 +169,13 @@ const App = () => {
             <Togglable buttonLabel='new blog'>
               <Blogform addBlog={addBlog} />
             </Togglable>
+            {
+              blogs.length === 0 ?
+                <p>No blogs in database</p>
+                :
+                <Blogs blogs={blogs} delBlog={delBlog} addLike={addLike} changeShow={changeShow} user={user} />
+            }
           </>
-      }
-
-
-
-      {
-        blogs.length === 0 ?
-          <p>No blogs in database</p>
-          :
-          <Blogs blogs={blogs} delBlog={delBlog} addLike={addLike} changeShow={changeShow} user={user} />
       }
     </div>
   )

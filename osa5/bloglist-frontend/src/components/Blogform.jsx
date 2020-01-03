@@ -1,20 +1,21 @@
-import React, { useState } from "react"
+import React from "react"
+import useField from "../hooks/index"
 
 const Blogform = ({ addBlog }) => {
-    const [title, setTitle] = useState("")
-    const [author, setAuthor] = useState("")
-    const [url, setUrl] = useState("")
+    const title = useField("title")
+    const author = useField("author")
+    const url = useField("urladdress")
 
     const submit = (event) => {
         event.preventDefault()
         const blogObject = {
-            title,
-            author,
-            url
+            title: title.value,
+            author: author.value,
+            url: url.value
         }
-        setTitle("")
-        setAuthor("")
-        setUrl("")
+        title.resetState()
+        author.resetState()
+        url.resetState()
         addBlog(blogObject)
     }
 
@@ -23,33 +24,15 @@ const Blogform = ({ addBlog }) => {
             <h2>Add a new blog</h2>
             <form onSubmit={submit}>
                 <div>
-                    Title
-                <input
-                        type="text"
-                        name="Title"
-                        value={title}
-                        onChange={({ target }) => setTitle(target.value)}
-                    />
+                    Title <input {...title.inputprops()} />
                 </div>
 
                 <div>
-                    Author
-                <input
-                        type="text"
-                        name="Author"
-                        value={author}
-                        onChange={({ target }) => setAuthor(target.value)}
-                    />
+                    Author <input {...author.inputprops()} />
                 </div>
 
                 <div>
-                    Url
-                <input
-                        type="text"
-                        name="Url"
-                        value={url}
-                        onChange={({ target }) => setUrl(target.value)}
-                    />
+                    Url <input {...url.inputprops()} />
                 </div>
 
                 <button type="submit">save</button>

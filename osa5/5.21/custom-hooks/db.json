@@ -1,0 +1,69 @@
+{
+  "notes": [
+    {
+      "content": "custom-hooks are awesome!",
+      "id": 1
+    },
+    {
+      "content": "best feature ever <3",
+      "id": 2
+    },
+    {
+      "content": "gvssc",
+      "id": 3
+    },
+    {
+      "content": "bvscs s",
+      "id": 4
+    },
+    {
+      "content": "",
+      "id": 5
+    },
+    {
+      "content": "",
+      "id": 6
+    },
+    {
+      "content": "",
+      "id": 7
+    }
+  ],
+  "persons": [
+    {
+      "name": "mluukkai",
+      "number": "040-5483923",
+      "id": 1
+    },
+    {
+      "name": "vsd",
+      "number": "5234",
+      "id": 2
+    },
+    {
+      "name": "vsd",
+      "number": "523425234",
+      "id": 3
+    },
+    {
+      "name": "kjhfdgsfc",
+      "number": "523425234",
+      "id": 4
+    },
+    {
+      "name": "",
+      "number": "",
+      "id": 5
+    },
+    {
+      "name": "",
+      "number": "",
+      "id": 6
+    },
+    {
+      "name": "",
+      "number": "",
+      "id": 7
+    }
+  ]
+}

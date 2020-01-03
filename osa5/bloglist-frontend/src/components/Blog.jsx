@@ -44,7 +44,7 @@ const removeButton = () => {
     <>
     {
       showAll ?
-        <div style={blogStyle} onClick={onShowClick}>
+        <div style={blogStyle} onClick={onShowClick} className="allContent" >
           Title:  {blog.title}<br></br>
           Url:  {blog.url}<br></br>
           Author:  {blog.author}<br></br>
@@ -52,7 +52,7 @@ const removeButton = () => {
           {removeButton()}
         </div>
         :
-        <div style={blogStyle} onClick={onShowClick}>
+        <div style={blogStyle} onClick={onShowClick} className="someContent" >
           {blog.title} -- {blog.author} {removeButton()}
         </div>
     }

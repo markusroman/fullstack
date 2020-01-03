@@ -1,14 +1,15 @@
-import React, { useState } from "react"
+import React from "react"
+import useField from "../hooks/index"
 
 const Login = ({ handleLogin }) => {
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
+    const username = useField("username")
+    const password = useField("password")
 
     const submit = (event) => {
         event.preventDefault()
-        setUsername('')
-        setPassword('')
-        handleLogin(username, password)
+        username.resetState()
+        password.resetState()
+        handleLogin(username.value, password.value)
     }
 
     return (
@@ -16,24 +17,8 @@ const Login = ({ handleLogin }) => {
             <h2>Log in to application</h2>
 
             <form onSubmit={submit}>
-                <div>
-                    username
-          <input
-                        type="text"
-                        value={username}
-                        name="Username"
-                        onChange={({ target }) => setUsername(target.value)}
-                    />
-                </div>
-                <div>
-                    password
-          <input
-                        type="password"
-                        value={password}
-                        name="Password"
-                        onChange={({ target }) => setPassword(target.value)}
-                    />
-                </div>
+                <div>username <input {...username.inputprops()} /></div>
+                <div>password <input {...password.inputprops()} /></div>
                 <button type="submit">login</button>
             </form>
         </>
