@@ -15,7 +15,6 @@ const reducer = (state = "", action) => {
             console.log("...")
             return state
         default:
-            console.log("Ei tehdä mitään... (suodatin)")
             return state
     }
 }

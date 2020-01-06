@@ -1,21 +1,29 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 import Filter from "./components/Filter"
 import Notification from "./components/Notification"
+import { initAnecs } from "./reducers/anecdoteReducer"
+import { connect } from 'react-redux'
 
-const App = ({ store }) => {
+const App = (props) => {
+
+  useEffect(() => {
+    props.initAnecs()
+  }, [])
 
   return (
     <>
       <h1>ANECDOTES</h1>
-      <Notification store={store} />
-      <AnecdoteForm store={store} />
+      <Notification />
+      <AnecdoteForm />
       <br></br>
-      <Filter store={store} />
-      <AnecdoteList store={store} />
+      <Filter />
+      <AnecdoteList />
     </>
   )
 }
 
-export default App
+export default connect(
+  null, { initAnecs }
+)(App)

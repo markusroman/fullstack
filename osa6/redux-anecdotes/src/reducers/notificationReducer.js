@@ -1,18 +1,16 @@
-export const createSetMessageAction = (content) => {
-    const action = {
-        type: "NOTIFY",
-        data: content
+export const setMessage = (content, time) => {
+    return async dispatch => {
+        dispatch({
+            type: "NOTIFY",
+            data: content
+        })
+        setTimeout(() => {
+            dispatch({
+                type: "DON'T NOTIFY"
+            })
+        }, time * 1000)
     }
-    return action
 }
-
-export const createEraseMessageAction = () => {
-    const action = {
-        type: "DON'T NOTIFY"
-    }
-    return action
-}
-
 
 const reducer = (state = "", action) => {
     switch (action.type) {
@@ -23,7 +21,6 @@ const reducer = (state = "", action) => {
             console.log("Poistetaan viesti...")
             return ""
         default:
-            console.log("Ei tehdä mitään... (viesti)")
             return state
     }
 }

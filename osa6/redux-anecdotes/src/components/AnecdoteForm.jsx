@@ -1,28 +1,41 @@
 import React from "react"
 import { useField } from "../hooks/index"
-import { createNewAnecdoteAction } from "../reducers/anecdoteReducer"
-import { createSetMessageAction, createEraseMessageAction } from "../reducers/notificationReducer"
+import { connect } from 'react-redux'
+import { setMessage } from "../reducers/notificationReducer"
+import { createAnecdote } from "../reducers/anecdoteReducer"
 
-const AnecdoteForm = ({store}) => {
-    const newAnecdote = useField("text")
+const AnecdoteForm = (props) => {
+    const newAnecdote = useField("anec")
 
-    const addAnec = (content) => {
-        store.dispatch(createNewAnecdoteAction(content))
-        store.dispatch(createSetMessageAction("New anecdote added successfully"))
-        setTimeout(() => {
-            store.dispatch(createEraseMessageAction())
-        }, 3000);
+    const addAnec = (event) => {
+        event.preventDefault()
+        if (newAnecdote.value === ""){
+            props.setMessage("Anecdote can't be empty", 5)
+            return null
+        }
+        props.createAnecdote(newAnecdote.value)
+        newAnecdote.value = ""
+        event.target.anec.value = ""
+        props.setMessage("New anecdote added successfully", 5)
     }
 
     return (
     <>
         <h2>Create new</h2>
-        <form onSubmit={() => addAnec(newAnecdote.value)} >
-            <div><input {...newAnecdote} /></div>
-            <button>create</button>
+        <form onSubmit={addAnec} >
+            <div><input name="anec" {...newAnecdote} /></div>
+            <button type="submit" >create</button>
         </form>
     </>
     )
 }
 
-export default AnecdoteForm
+const mapDispatchToProps = {
+    createAnecdote,
+    setMessage
+}
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(AnecdoteForm)
