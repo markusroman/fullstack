@@ -1,11 +1,17 @@
 import React, {useState} from 'react'
-const Blog = ({ blog, delBlog, addLike, changeShow, user }) => {
+import { likeBlog, delBlog } from "../reducers/blogReducer"
+import { setMessage } from "../reducers/notificationReducer"
+import { connect } from 'react-redux'
 
+const Blog = (props) => {
   const [showAll, setShowAll] = useState(false)
+
+  const blog = props.blog
 
   const removeBlog = (event) => {
     event.preventDefault()
-    delBlog(blog)
+    props.delBlog(blog)
+    props.setMessage(`Blog "${blog.title}" by ${blog.author} removed!`, 5)
   }
 
   const blogStyle = {
@@ -17,28 +23,28 @@ const Blog = ({ blog, delBlog, addLike, changeShow, user }) => {
     width: 600
   }
 
-const onLikeClick = (event) => {
-  event.preventDefault()
-
-  addLike(event.target.id)
-}
-
-const onShowClick = (event) => {
-  event.preventDefault()
-  setShowAll(!showAll)
-  changeShow()
-}
-
-const removeButton = () => {
-  if(user === null){
-    return null
+  const onLikeClick = (event) => {
+    event.preventDefault()
+    props.likeBlog(blog)
+    props.setMessage(`Blog "${blog.title}" by ${blog.author} liked!`, 5)
   }
-  if (blog.user === user.username){
-    return <button type="button" id={blog.id} onClick={removeBlog} >remove</button>
-  } else {
-    return null
+
+
+  const onShowClick = (event) => {
+    event.preventDefault()
+    setShowAll(!showAll)
   }
-}
+
+  const removeButton = () => {
+    if(props.user === null){
+      return null
+    }
+    if (blog.user === props.user.username){
+      return <button type="button" id={blog.id} onClick={removeBlog} >remove</button>
+    } else {
+      return null
+    }
+  }
 
   return (
     <>
@@ -60,4 +66,18 @@ const removeButton = () => {
   )
 }
 
-export default Blog
+const mapDispatchToProps = {
+  likeBlog,
+  delBlog,
+  setMessage
+}
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Blog)
