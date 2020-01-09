@@ -3,13 +3,14 @@ import useField from "../hooks/index"
 import { connect } from 'react-redux'
 import { createBlog } from "../reducers/blogReducer"
 import { setMessage } from "../reducers/notificationReducer"
+import { Form, Button } from 'semantic-ui-react'
 
 const Blogform = (props) => {
     const title = useField("title")
     const author = useField("author")
     const url = useField("urladdress")
 
-    const submit = (event) => {
+    const onSubmit = (event) => {
         event.preventDefault()
         if (title.value === "" || url.value === "" || author.value === "") {
             props.setMessage("Blog can't have empty fields", 5)
@@ -20,7 +21,8 @@ const Blogform = (props) => {
             title: title.value,
             author: author.value,
             url: url.value,
-            likes: 0
+            likes: 0,
+            comments: []
         }
         title.resetState()
         author.resetState()
@@ -32,22 +34,21 @@ const Blogform = (props) => {
     return (
         <>
             <h2>Add a new blog</h2>
-            <form onSubmit={submit}>
-                <div>
-                    Title <input {...title.inputprops()} />
-                </div>
-
-                <div>
-                    Author <input {...author.inputprops()} />
-                </div>
-
-                <div>
-                    Url <input {...url.inputprops()} />
-                </div>
-
-                <button type="submit">save</button>
-            </form>
-
+            <Form onSubmit={onSubmit}>
+            <Form.Field>
+                <label>Title</label>
+                <input id="title" {...title.inputprops()} />
+            </Form.Field>
+            <Form.Field>
+                <label>Author</label>
+                <input id="author" {...author.inputprops()} />
+            </Form.Field>
+            <Form.Field>
+                <label>Url</label>
+                <input id="url" {...url.inputprops()} />
+            </Form.Field>
+            <Button type='submit'>save</Button>
+            </Form>
         </>
     )
 }
@@ -55,14 +56,14 @@ const Blogform = (props) => {
 const mapDispatchToProps = {
     createBlog,
     setMessage
-  }
-  const mapStateToProps = (state) => {
-    return {
-      blogs: state.blogs
-    }
-  }
-  
-  export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Blogform)
+}
+const mapStateToProps = (state) => {
+return {
+    blogs: state.blogs
+}
+}
+
+export default connect(
+mapStateToProps,
+mapDispatchToProps
+)(Blogform)

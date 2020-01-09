@@ -5,25 +5,30 @@ const User = (props) => {
     
 
     if ( props.user === undefined) { 
-        return null
+      return <p>Still loading</p>
     }
  
-    const u = props.user
-  const getTitle = (blog) => {
-    const wanted = props.blogs.find(b => b.id === blog)
-      return wanted.title
-  }
+  const u = props.user
 
   return (
     <div>
-        <h2>{u.name}</h2>
+      <h2>{u.username}</h2>
+
+      {
+        u.blogs.length === 0 ?
+          <p>User hasn't added any blogs</p>
+          :
+          <>
+            <h3>Added blogs</h3>
+            <ul>
+              {u.blogs.map(b => 
+                <li key={b.id} >{b.title}</li>
+              )}
+            </ul>
+          </>
+      }
         
-        <h3>Added blogs</h3>
-        <ul>
-            {u.blogs.map(b => 
-                <li key={b.id} >{getTitle(b)}</li>
-            )}
-        </ul>
+        
     </div>
   )
 }

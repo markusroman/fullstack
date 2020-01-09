@@ -8,8 +8,9 @@ import Blogs from './Blogs'
 import Blog from "./Blog"
 import Users from "./Users"
 import User from "./User"
+import { Menu } from "semantic-ui-react"
   
-  const Menu = (props) => {
+  const menu = (props) => {
     const padding = {
       paddingRight: 5
     }
@@ -17,10 +18,14 @@ import User from "./User"
         <div>
           <Router>
             <div>
-              <div>
-                <Link style={padding} to="/">blogs</Link>
-                <Link style={padding} to="/users">users</Link>
-              </div>
+              <Menu inverted>
+                <Menu.Item link>
+                  <Link style={padding} to="/">blogs</Link>
+                </Menu.Item>
+                <Menu.Item link>
+                  <Link style={padding} to="/users">users</Link>
+                </Menu.Item>
+              </Menu>
               <Route exact path="/" render={() => <Blogs />} />
               <Route path="/users" render={() => <Users />} />
               <Route exact path="/blogs/:id" render={({ match }) => 
@@ -45,4 +50,4 @@ import User from "./User"
   export default connect(
     mapStateToProps,
     null
-  )(Menu)
+  )(menu)
