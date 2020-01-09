@@ -26,6 +26,7 @@ const Blogform = (props) => {
         author.resetState()
         url.resetState()
         props.createBlog(blogObject)
+        props.setMessage(`A new blog "${blogObject.title}" by ${blogObject.author} created!`, 5)
     }
 
     return (

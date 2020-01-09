@@ -1,8 +1,7 @@
 import React from "react"
 import useField from "../hooks/index"
-import blogService from "../services/blogs"
 import { setMessage } from "../reducers/notificationReducer"
-import { setUser, clearUser } from "../reducers/userReducer"
+import { setUser, clearUser } from "../reducers/loginReducer"
 import { connect } from 'react-redux'
 
 const Login = (props) => {
@@ -17,15 +16,7 @@ const Login = (props) => {
       props.setMessage("Wrong credentials", 5)
       return null
     }
-    props.setUser({ username, password })
-    if (props.user === null) {
-      props.setMessage("Wrong credentials", 5)
-      return null
-    }
-    window.localStorage.setItem(
-      'loggedblogappUser', JSON.stringify(props.user)
-    )
-    blogService.setToken(props.user.token)
+    props.setUser({ username: username.value, password: password.value })
     props.setMessage("Login successful", 5)
   }
 

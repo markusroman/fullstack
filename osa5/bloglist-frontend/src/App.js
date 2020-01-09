@@ -1,33 +1,33 @@
 import React, { useEffect } from "react"
-import blogService from './services/blogs'
 import Notification from "./components/Notification"
 import Loginform from "./components/Loginform"
 import Blogform from "./components/Blogform"
-import Blogs from "./components/Blogs"
 import Togglable from "./components/Togglable"
+import Menu from "./components/Menu"
 import { initBlogs } from "./reducers/blogReducer"
 import { setMessage } from "./reducers/notificationReducer"
-import { clearUser, initUser } from "./reducers/userReducer"
+import { clearUser, initUser } from "./reducers/loginReducer"
 import { connect } from 'react-redux'
+import { initUsers } from "./reducers/userReducer"
 
 const App = (props) => {
 
   useEffect(() => {
     props.initBlogs()
   }, [])
-
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedblogappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      props.initUser(user)
-      blogService.setToken(user.token)
+    if (!loggedUserJSON) {
+      return
     }
+    props.initUser(loggedUserJSON)
+  }, [])
+  useEffect(() => {
+    props.initUsers()
   }, [])
 
   const handleLogout = (event) => {
     event.preventDefault()
-    window.localStorage.removeItem('loggedblogappUser')
     props.clearUser()
     props.setMessage(`Logged out ${props.user.name}`, 5)
   }
@@ -52,12 +52,7 @@ const App = (props) => {
             <Togglable buttonLabel='new blog'>
               <Blogform />
             </Togglable>
-            {
-              props.blogs.length === 0 ?
-                <p>No blogs in database</p>
-                :
-                <Blogs />
-            }
+            <Menu />
           </>
       }
     </div>
@@ -68,7 +63,8 @@ const mapDispatchToProps = {
   initBlogs,
   setMessage,
   clearUser,
-  initUser
+  initUser,
+  initUsers
 }
 const mapStateToProps = (state) => {
   return {

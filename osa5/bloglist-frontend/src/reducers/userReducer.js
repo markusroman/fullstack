@@ -1,44 +1,27 @@
-import loginService from "../services/login";
+import userService from "../services/users"
 
-export const setUser = (username, password) => {
+export const initUsers = () => {
     return async dispatch => {
-        const loggedUser = await loginService.login({ username, password })
+        const users = await userService.getAll()
         dispatch({
-            type: "SET_USER",
-            data: loggedUser
+            type: "INIT_USERS",
+            data: users
         })
     }
 }
 
-export const initUser = (user) => {
-    return async dispatch => {
-        dispatch({
-            type: "INIT_USER",
-            data: user
-        })
-    }
-}
-
-export const clearUser = () => {
-    return async dispatch => {
-        dispatch({
-            type: "CLEAR_USER",
-            data: null
-        })
-    }
-}
-
-const reducer = (state = null, action) => {
+const reducer = (state = [], action) => {
+    let all = null
     switch (action.type) {
+        case "INIT_USERS":
+            console.log("Haetaan käyttäjät palvelimelta...")
+            return action.data
         case "INIT_USER":
-            console.log("Haetaan käyttäjä selaimen muistista...")
-            return action.data
-        case "SET_USER":
-            console.log("Kirjaudutaan...")
-            return action.data
-        case "CLEAR_USER":
-            console.log("Kirjaudutaan ulos...")
-            return null
+            all = action.data.allUsers
+            return
+        case "LOGIN":
+            all = action.data.allUsers
+            return
         default:
             return state
     }
