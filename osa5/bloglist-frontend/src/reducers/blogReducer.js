@@ -42,10 +42,11 @@ export const delBlog = blog => {
 
 export const commentBlog = (com, blog) => {
   return async dispatch => {
-    const newBlog = await blogService.comment({
+    const toSend = {
       ...blog,
       comments: blog.comments.concat(com),
-    })
+    }
+    const newBlog = await blogService.update(toSend)
     dispatch({
       type: "COMMENT_BLOG",
       data: newBlog,
@@ -72,7 +73,6 @@ const reducer = (state = [], action) => {
 
     case "INIT_BLOGS":
       console.log("Alustetaan blogit...")
-      console.log(action.data)
       action.data.forEach(element => {
         if (element.comments === undefined) {
           element.comments = []

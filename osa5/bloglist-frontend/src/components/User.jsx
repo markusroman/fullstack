@@ -12,7 +12,7 @@ const User = (props) => {
 
   return (
     <div>
-      <h2>{u.username}</h2>
+      <h2>{u.name} ("{u.username}")</h2>
 
       {
         u.blogs.length === 0 ?

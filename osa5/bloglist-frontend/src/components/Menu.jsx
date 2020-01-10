@@ -27,7 +27,7 @@ import { Menu } from "semantic-ui-react"
                 </Menu.Item>
               </Menu>
               <Route exact path="/" render={() => <Blogs />} />
-              <Route path="/users" render={() => <Users />} />
+              <Route exact path="/users" render={() => <Users />} />
               <Route exact path="/blogs/:id" render={({ match }) => 
                 <Blog blog={props.blogs.find(b => b.id === match.params.id)} />
               } />
